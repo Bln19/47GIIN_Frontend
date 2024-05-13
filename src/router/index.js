@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ContactView from "../views/ContactView.vue";
+import DashboardView from "../views/DashboardView.vue";
 
 import LoginForm from "../components/LoginForm.vue";
+import UrbForm from "../components/UrbForm.vue";
 
 const routes = [
   {
@@ -16,10 +18,23 @@ const routes = [
     component: ContactView,
   },
   {
+    path: "/dashboard",
+    name: "dashboard",
+    component: DashboardView,
+    meta: { requiresAuth: true }
+  },
+
+  {
     path: "/login",
     name: "login",
     component: LoginForm, 
   },
+  {
+    path: "/urb",
+    name: "urb",
+    component: UrbForm, 
+  },
+
 
  
 ];
@@ -28,5 +43,6 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
 
 export default router;

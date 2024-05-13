@@ -10,14 +10,20 @@
 
                 <div class="d-flex align-center mb-5">
                   <font-awesome-icon :icon="['fas', 'user']" class="white--text mr-3" />
-                  <v-text-field v-model="credentials.username" label="Nombre de Usuario" outlined
+                  <v-text-field 
+                    v-model="credentials.username"  
+                    label="Nombre de Usuario" 
+                    outlined
                     class="white--text flex-grow-1">
                   </v-text-field>
                 </div>
 
                 <div class="d-flex align-center mt-5 mb-5">
                   <font-awesome-icon :icon="['fas', 'lock']" class="white--text mr-3" />
-                  <v-text-field v-model="credentials.password" label="Contrase&ntilde;a" type="password" 
+                  <v-text-field 
+                    v-model="credentials.password" 
+                    label="Contrase&ntilde;a" 
+                    type="password" 
                     outlined
                     class="white--text flex-grow-1">
                   </v-text-field>
@@ -34,6 +40,7 @@
                   class="mb-2"
                 >ENTRAR
                 </v-btn>
+                <v-alert v-if="errors.login" type="error" dense>{{ errors.login }}</v-alert>
               </v-card-text>
             </v-card>
           </v-col>
@@ -71,34 +78,32 @@ export default {
     login() {
       this.errors.username = this.credentials.username ? null : "El nombre de usuario es obligatorio.";
       this.errors.password = this.credentials.password ? null : "La contraseña es obligatoria.";
-      
+
       if (!this.errors.username && !this.errors.password) {
-        axios.post('/api/login', {
+        axios.post('http://localhost:4000/login', {
           username: this.credentials.username,
           password: this.credentials.password
         })
         .then(response => {
-          console.log(response);
-          // Redirección al componente Home si el inicio de sesión es exitoso
-          this.$router.push({ name: 'home' });
+          if (response.data.success) {
+            this.$router.push({ 
+              name: 'urb',
+              params: { urbanizacion: response.data.urbanizacion }
+            });
+          } else {
+            this.errors.login = response.data.error || "Credenciales incorrectas.";
+          }
         })
         .catch(error => {
-          if (error.response && error.response.status === 401) {
-            this.errors.login = "Usuario o contraseña no son correctos.";
-          } else if (error.response && error.response.status === 404) {
-            this.errors.login = "Usuario no registrado. Por favor, contacte al administrador.";
-          } else {
-            // Otro tipo de error HTTP
-            this.errors.login = "Error al intentar iniciar sesión.";
-          }
+          this.errors.login = "Problemas de conexión o datos incorrectos." + error.message;
         });
       }
-
     },
 
     changeColor(){
       this.buttonColor = "teal darken-4";
     },
+
     revertColor(){
       this.buttonColor = "red darken-3";
 
@@ -137,10 +142,9 @@ html,body,#app {
 .rounded-lg {
   border-radius: 10px;
 }
-
+s
 .pa-5 {
   padding: 2.5rem !important;
-  /* Ajusta el espaciado interno */
 }
 
 .text-center {
@@ -155,6 +159,5 @@ html,body,#app {
   color: white;
  
 }
-
 
 </style>

@@ -41,7 +41,6 @@ export default {
 };
 </script>
 <style>
-/* Estilos existentes */
 html, body {
   height: 100%;
   margin: 0;

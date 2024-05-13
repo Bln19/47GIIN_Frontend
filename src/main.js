@@ -1,7 +1,10 @@
 import { createApp } from "vue";
+import { createPinia } from 'pinia';
 import App from "./App.vue";
 import router from './router'
-import '@fortawesome/fontawesome-free/css/all.min.css';
+
+
+import fontawesome from './plugins/fontawesome';
 import 'bootstrap/dist/css/bootstrap.css';
 
 // Vuetify
@@ -16,9 +19,14 @@ const vuetify = createVuetify({
 });
 
 const app = createApp(App);
+const pinia = createPinia();
+
+app.use(pinia);
 app.use(vuetify);
-app.use(router);  // Añadir el router aquí
+app.use(router);
+app.use(fontawesome);
+
 app.mount("#app");
 
-// Importa los scripts de Bootstrap al final
+
 import 'bootstrap/dist/js/bootstrap';
