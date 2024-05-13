@@ -33,9 +33,8 @@ const routes = [
     path: "/urb",
     name: "urb",
     component: UrbForm, 
+    props: true
   },
-
-
  
 ];
 
