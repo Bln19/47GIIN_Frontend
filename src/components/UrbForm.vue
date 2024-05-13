@@ -16,10 +16,9 @@ import axios from 'axios';
 
 export default {
     props: {
-        urbanizacion: {
-            type: Object,
-            required: true,
-            default: () => ({})
+        id: {
+            type: String,
+            required: true
         }
     },
     data() {
@@ -29,11 +28,11 @@ export default {
         };
     },
     mounted() {
-        if (this.urbanizacion && Object.keys(this.urbanizacion).length > 0) {
-            this.urbanizacionLocal = { ...this.urbanizacion };
-            this.loading = false;
-        } else {
-            axios.get('http://localhost:4000/urbanizacion')
+        this.fetchUrbanizacion(this.id);
+    },
+    methods: {
+        fetchUrbanizacion(id) {
+            axios.get(`http://localhost:4000/urbanizacion/${id}`)
                 .then(response => {
                     this.urbanizacionLocal = response.data;
                     this.loading = false;

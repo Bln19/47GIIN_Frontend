@@ -74,7 +74,6 @@ export default {
     };
   },
   methods: {
-
     login() {
       this.errors.username = this.credentials.username ? null : "El nombre de usuario es obligatorio.";
       this.errors.password = this.credentials.password ? null : "La contraseña es obligatoria.";
@@ -85,31 +84,32 @@ export default {
           password: this.credentials.password
         })
         .then(response => {
+          console.log("Respuesta del servidor:", response); // Verifica la respuesta aquí
           if (response.data.success) {
+            console.log("Datos de la urbanización recibidos:", response.data.urbanizacion);
             this.$router.push({ 
               name: 'urb',
-              params: { urbanizacion: response.data.urbanizacion }
+              params: { id: response.data.urbanizacion.id }
             });
           } else {
             this.errors.login = response.data.error || "Credenciales incorrectas.";
           }
         })
         .catch(error => {
+          console.log("Error en la solicitud:", error); // Verifica cualquier error aquí
           this.errors.login = "Problemas de conexión o datos incorrectos." + error.message;
         });
       }
     },
-
     changeColor(){
       this.buttonColor = "teal darken-4";
     },
-
     revertColor(){
       this.buttonColor = "red darken-3";
-
     }
   }
 }
+
 </script>
 
 <style scoped>
@@ -123,11 +123,9 @@ html,body,#app {
 .v-main {
   background: url('@/assets/background_2.jpg') no-repeat center center fixed;
   background-size: cover;
-  
 }
 
 .transparent-container {
-
   margin: auto;
   position: absolute;
   top: 50%;
@@ -142,7 +140,7 @@ html,body,#app {
 .rounded-lg {
   border-radius: 10px;
 }
-s
+
 .pa-5 {
   padding: 2.5rem !important;
 }
@@ -157,7 +155,5 @@ s
 
 .white--text {
   color: white;
- 
 }
-
 </style>

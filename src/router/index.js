@@ -30,7 +30,7 @@ const routes = [
     component: LoginForm, 
   },
   {
-    path: "/urb",
+    path: "/urb/:id",
     name: "urb",
     component: UrbForm, 
     props: true
