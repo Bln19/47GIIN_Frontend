@@ -5,6 +5,7 @@ import DashboardView from "../views/DashboardView.vue";
 
 import LoginForm from "../components/LoginForm.vue";
 import UrbForm from "../components/UrbForm.vue";
+import UserRegisterForm from "../components/UserRegisterForm.vue";
 
 const routes = [
   {
@@ -18,9 +19,10 @@ const routes = [
     component: ContactView,
   },
   {
-    path: "/dashboard",
+    path: "/dashboard/:id",
     name: "dashboard",
     component: DashboardView,
+    props: true,
     meta: { requiresAuth: true }
   },
 
@@ -35,12 +37,34 @@ const routes = [
     component: UrbForm, 
     props: true
   },
+  {
+    path: "/register",
+    name: "register",
+    component: UserRegisterForm, 
+    meta: { 
+      requiresAuth: true,
+      role: 'administrador'
+    }
+  },
  
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!sessionStorage.getItem('user');
+  const userRole = sessionStorage.getItem('role');
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next({ name: 'login' });
+  } else if (to.meta.requiresAuth && to.meta.role && to.meta.role !== userRole) {
+    next({ name: 'home' });
+  } else {
+    next();
+  }
 });
 
 

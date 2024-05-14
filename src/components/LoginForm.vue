@@ -4,10 +4,9 @@
       <v-container fluid class="transparent-container">
         <v-row justify="center">
           <v-col cols="12" md="3">
-            <v-card class="elevation-12 rounded-lg transparent-card ">
+            <v-card class="elevation-12 rounded-lg transparent-card">
               <v-card-text class="pa-5 mb-5">
-                <h2 class="text-center mb-10 white--text font-weight-light">INICIAR SESI&Oacute;N</h2>
-
+                <h2 class="text-center mb-10 white--text font-weight-light">INICIAR SESIÓN</h2>
                 <div class="d-flex align-center mb-5">
                   <font-awesome-icon :icon="['fas', 'user']" class="white--text mr-3" />
                   <v-text-field 
@@ -17,7 +16,6 @@
                     class="white--text flex-grow-1">
                   </v-text-field>
                 </div>
-
                 <div class="d-flex align-center mt-5 mb-5">
                   <font-awesome-icon :icon="['fas', 'lock']" class="white--text mr-3" />
                   <v-text-field 
@@ -28,7 +26,6 @@
                     class="white--text flex-grow-1">
                   </v-text-field>
                 </div>
-
                 <v-btn 
                   :color="buttonColor" 
                   rounded
@@ -37,9 +34,7 @@
                   @click="login" 
                   @mouseover="changeColor" 
                   @mouseleave="revertColor"
-                  class="mb-2"
-                >ENTRAR
-                </v-btn>
+                  class="mb-2">ENTRAR</v-btn>
                 <v-alert v-if="errors.login" type="error" dense>{{ errors.login }}</v-alert>
               </v-card-text>
             </v-card>
@@ -87,8 +82,11 @@ export default {
           console.log("Respuesta del servidor:", response); // Verifica la respuesta aquí
           if (response.data.success) {
             console.log("Datos de la urbanización recibidos:", response.data.urbanizacion);
+            sessionStorage.setItem('user', JSON.stringify(response.data.user));
+            sessionStorage.setItem('role', response.data.user.role);
+            sessionStorage.setItem('urbanizacion', JSON.stringify(response.data.urbanizacion));
             this.$router.push({ 
-              name: 'urb',
+              name: 'dashboard',
               params: { id: response.data.urbanizacion.id }
             });
           } else {
@@ -109,7 +107,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>
