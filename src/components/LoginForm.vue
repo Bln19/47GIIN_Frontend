@@ -20,7 +20,7 @@
                   <font-awesome-icon :icon="['fas', 'lock']" class="white--text mr-3" />
                   <v-text-field 
                     v-model="credentials.password" 
-                    label="Contrase&ntilde;a" 
+                    label="Contraseña" 
                     type="password" 
                     outlined
                     class="white--text flex-grow-1">
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from '../services/api';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default {
@@ -69,22 +69,24 @@ export default {
     };
   },
   methods: {
-    login() {
+    async login() {
       this.errors.username = this.credentials.username ? null : "El nombre de usuario es obligatorio.";
       this.errors.password = this.credentials.password ? null : "La contraseña es obligatoria.";
 
       if (!this.errors.username && !this.errors.password) {
-        axios.post('http://localhost:4000/login', {
-          username: this.credentials.username,
-          password: this.credentials.password
-        })
-        .then(response => {
-          console.log("Respuesta del servidor:", response); // Verifica la respuesta aquí
-          if (response.data.success) {
+        try {
+          const response = await api.post('/login', {
+            username: this.credentials.username,
+            password: this.credentials.password
+          });
+          console.log("Respuesta del servidor:", response);
+
+          if (response.data.access_token) {
             console.log("Datos de la urbanización recibidos:", response.data.urbanizacion);
-            sessionStorage.setItem('user', JSON.stringify(response.data.user));
-            sessionStorage.setItem('role', response.data.user.role);
-            sessionStorage.setItem('urbanizacion', JSON.stringify(response.data.urbanizacion));
+            localStorage.setItem('access_token', response.data.access_token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+            localStorage.setItem('role', response.data.user.role);
+            localStorage.setItem('urbanization', JSON.stringify(response.data.urbanizacion));
             this.$router.push({ 
               name: 'dashboard',
               params: { id: response.data.urbanizacion.id }
@@ -92,11 +94,10 @@ export default {
           } else {
             this.errors.login = response.data.error || "Credenciales incorrectas.";
           }
-        })
-        .catch(error => {
-          console.log("Error en la solicitud:", error); // Verifica cualquier error aquí
-          this.errors.login = "Problemas de conexión o datos incorrectos." + error.message;
-        });
+        } catch (error) {
+          console.log("Error en la solicitud:", error);
+          this.errors.login = "Problemas de conexión o datos incorrectos. " + error.message;
+        }
       }
     },
     changeColor(){

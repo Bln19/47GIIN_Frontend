@@ -2,7 +2,7 @@ import { createApp } from "vue";
 import { createPinia } from 'pinia';
 import App from "./App.vue";
 import router from './router'
-
+import axios from 'axios';
 
 import fontawesome from './plugins/fontawesome';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -12,6 +12,8 @@ import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+
+axios.defaults.withCredentials = true;
 
 const vuetify = createVuetify({
   components,

@@ -55,10 +55,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!sessionStorage.getItem('user');
-  const userRole = sessionStorage.getItem('role');
+  const token = localStorage.getItem('access_token');
+  const userRole = localStorage.getItem('role');
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.meta.requiresAuth && !token) {
     next({ name: 'login' });
   } else if (to.meta.requiresAuth && to.meta.role && to.meta.role !== userRole) {
     next({ name: 'home' });

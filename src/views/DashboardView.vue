@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from '../services/api';
 
 export default {
     data() {
@@ -36,8 +36,15 @@ export default {
         };
     },
     created() {
-        this.role = sessionStorage.getItem('role');
-        const urbanizacion = JSON.parse(sessionStorage.getItem('urbanizacion'));
+        const user = JSON.parse(localStorage.getItem('user')); // Cambiado a localStorage
+        if (user) {
+            this.role = user.role;
+        } else {
+            console.error('No se encontró el usuario en localStorage');
+            this.role = null; // O algún valor por defecto
+        }
+        
+        const urbanizacion = JSON.parse(localStorage.getItem('urbanization')); // Cambiado a localStorage
         if (urbanizacion && urbanizacion.id === parseInt(this.$route.params.id, 10)) {
             this.urbanizacion = urbanizacion;
             this.loading = false;
@@ -47,9 +54,10 @@ export default {
     },
     methods: {
         fetchUrbanizacion(id) {
-            axios.get(`http://localhost:4000/urb/${id}`)
+            api.get(`/urbanizacion/${id}`)
                 .then(response => {
                     this.urbanizacion = response.data;
+                    localStorage.setItem('urbanization', JSON.stringify(this.urbanizacion)); // Almacenar en localStorage
                     this.loading = false;
                 })
                 .catch(error => {
@@ -58,12 +66,13 @@ export default {
                 });
         },
         goToRegister() {
-            this.$router.push({ name: 'register' });
+            const urbanizacion = JSON.parse(localStorage.getItem('urbanization')); // Cambiado a localStorage
+            if (urbanizacion) {
+                this.$router.push({ name: 'register', params: { id: urbanizacion.id } });
+            } else {
+                console.error('No se encontró la urbanización en localStorage');
+            }
         }
     }
 };
 </script>
-
-<style scoped>
-
-</style>
