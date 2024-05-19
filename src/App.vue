@@ -14,13 +14,16 @@
           <li class="nav-item" v-if="!isAuthenticated">
             <router-link :to="'/login'" class="nav-link">Login</router-link>
           </li>
-          <li class="nav-item" v-if="isAuthenticated && role === 'administrador'">
-            <router-link :to="'/register'" class="nav-link">Registrar Usuario</router-link>
-          </li>
           <li class="nav-item" v-if="isAuthenticated">
-            <a class="nav-link" @click="logout">Logout</a>
+            <router-link :to="`/urbanization/${urbanizacion.id}`" class="nav-link">La Urbanización</router-link>
           </li>
-          <li class="nav-item" v-else>
+          <!-- <li class="nav-item" v-if="isAuthenticated && role === 'administrador'">
+            <router-link :to="'/register'" class="nav-link">Registrar Usuario</router-link>
+          </li> -->
+          <li class="nav-item" v-if="isAuthenticated">
+            <a class="nav-link" @click="handleLogout">Logout</a>
+          </li>
+          <li class="nav-item" v-if="!isAuthenticated">
             <router-link :to="'/contact'" class="nav-link">Contacto</router-link>
           </li>
           <li class="nav-item">
@@ -34,29 +37,25 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
-  data() {
-    return {
-      isAuthenticated: !!sessionStorage.getItem('user'),
-      urbanizacion: JSON.parse(sessionStorage.getItem('urbanizacion')) || null,
-      role: sessionStorage.getItem('role') || ''
-    };
+  computed: {
+    ...mapGetters(['isAuthenticated', 'urbanizacion', 'role']),
   },
   methods: {
-    logout() {
-      sessionStorage.clear();
-      this.isAuthenticated = false;
-      this.urbanizacion = null;
-      this.role = '';
-      this.$router.push({ name: 'home' });
+    ...mapActions(['logout']),
+    handleLogout() {
+      this.logout(); // Llamar a la acción logout de Vuex
+      this.$router.push({ name: 'home' }); // Redirigir a la vista home
     }
   },
   watch: {
-    // eslint-disable-next-line no-unused-vars
-    '$route'(to, from) {
-      this.isAuthenticated = !!sessionStorage.getItem('user');
-      this.urbanizacion = JSON.parse(sessionStorage.getItem('urbanizacion')) || null;
-      this.role = sessionStorage.getItem('role') || '';
+    '$route'() {
+      // Actualiza el estado en cada cambio de ruta
+      this.isAuthenticated = this.$store.getters.isAuthenticated;
+      this.urbanizacion = this.$store.getters.urbanizacion;
+      this.role = this.$store.getters.role;
     }
   }
 };

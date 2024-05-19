@@ -2,10 +2,14 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ContactView from "../views/ContactView.vue";
 import DashboardView from "../views/DashboardView.vue";
+import UrbanizationView from "../views/UrbanizationView.vue";
+import EditOwnerView from "../views/EditOwnerView.vue";
 
 import LoginForm from "../components/LoginForm.vue";
 import UrbForm from "../components/UrbForm.vue";
 import UserRegisterForm from "../components/UserRegisterForm.vue";
+import OwnerList from "../components/OwnerList.vue";
+
 
 const routes = [
   {
@@ -25,7 +29,13 @@ const routes = [
     props: true,
     meta: { requiresAuth: true }
   },
-
+  {
+    path: "/urbanization/:id",
+    name: "urbanization",
+    component: UrbanizationView,
+    props: true,
+    meta: { requiresAuth: true }
+  },
   {
     path: "/login",
     name: "login",
@@ -46,7 +56,21 @@ const routes = [
       role: 'administrador'
     }
   },
- 
+  {
+    path: "/propietarios/:id",
+    name: "propietarios",
+    component: OwnerList,
+    props: true,
+    meta: { requiresAuth: true, role: 'administrador' }
+  },
+  {
+    path: "/edit-propietario/:id",
+    name: "edit-propietario",
+    component: EditOwnerView,
+    props: true,
+    meta: { requiresAuth: true, role: 'administrador' }
+  },
+
 ];
 
 const router = createRouter({
