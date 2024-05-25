@@ -16,6 +16,9 @@
                                 <v-col cols="12">
                                     <v-btn @click="goToEmployesList" class="rounded-btn employee-border" block>Empleados</v-btn>
                                 </v-col>
+                                <v-col cols="12">
+                                    <v-btn @click="goToRolesList" class="rounded-btn role-border" block>Roles</v-btn>
+                                </v-col>
                             </v-row>
                         </v-card-actions>
                     </v-card>
@@ -52,7 +55,7 @@ export default {
             this.role = user.role;
         } else {
             console.error('No se encontró el usuario en localStorage');
-            this.role = null; // O algún valor por defecto
+            this.role = null;
         }
 
         const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion')); // Cambiado a localStorage
@@ -70,7 +73,7 @@ export default {
                 .then(response => {
                     this.urbanizacion = response.data;
                     localStorage.setItem('urbanizacion', JSON.stringify(this.urbanizacion)); // Almacenar en localStorage
-                    this.login(this.urbanizacion); // Actualizar el estado en Vuex
+                    this.login(this.urbanizacion); 
                     this.loading = false;
                 })
                 .catch(error => {
@@ -101,6 +104,14 @@ export default {
             } else {
                 console.error('No se encontró la urbanización en localStorage');
             }
+        },
+        goToRolesList() {
+            const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion'));
+            if (urbanizacion) {
+                this.$router.push({ name: 'roles', params: { id: urbanizacion.id } });
+            } else {
+                console.error('No se encontró la urbanización en localStorage');
+            }
         }
     }
 };
@@ -127,5 +138,11 @@ export default {
     border-color: #1a7b82;
     color: #1a7b82;
 }
+
+.role-border{
+    border-color: #c26004;
+    color: #c26004;
+}
+
 </style>
 

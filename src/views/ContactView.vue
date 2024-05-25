@@ -51,7 +51,7 @@ export default {
       this.goBack();
     },
     login() {
-      // Aquí va el código para la función de login
+
     },
     goBack() {
       this.$router.go(-1);

@@ -11,6 +11,8 @@ import UrbForm from "../components/UrbForm.vue";
 import UserRegisterForm from "../components/UserRegisterForm.vue";
 import OwnerList from "../components/OwnerList.vue";
 import EmployesList from "../components/EmployesList.vue";
+import RolesList from "../components/RolesList.vue";
+import RoleRegisterForm from "../components/RoleRegisterForm.vue";
 
 
 const routes = [
@@ -86,6 +88,20 @@ const routes = [
     props: true,
     meta: { requiresAuth: true, role: 'administrador' }
   },
+  {
+    path: "/roles/:id",
+    name: "roles",
+    component: RolesList,
+    props: true,
+    meta: { requiresAuth: true, role: 'administrador' }
+  },
+  {
+    path: "/add-role/:id",
+    name: "add-role",
+    component: RoleRegisterForm,
+    props: true,
+    meta: { requiresAuth: true, role: 'administrador' }
+  }
 
 ];
 
