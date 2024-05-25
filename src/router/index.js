@@ -4,11 +4,13 @@ import ContactView from "../views/ContactView.vue";
 import DashboardView from "../views/DashboardView.vue";
 import UrbanizationView from "../views/UrbanizationView.vue";
 import EditOwnerView from "../views/EditOwnerView.vue";
+import EditEmployeView from "../views/EditEmployeView.vue";
 
 import LoginForm from "../components/LoginForm.vue";
 import UrbForm from "../components/UrbForm.vue";
 import UserRegisterForm from "../components/UserRegisterForm.vue";
 import OwnerList from "../components/OwnerList.vue";
+import EmployesList from "../components/EmployesList.vue";
 
 
 const routes = [
@@ -67,6 +69,20 @@ const routes = [
     path: "/edit-propietario/:id",
     name: "edit-propietario",
     component: EditOwnerView,
+    props: true,
+    meta: { requiresAuth: true, role: 'administrador' }
+  },
+  {
+    path: "/empleados/:id",
+    name: "empleados",
+    component: EmployesList,
+    props: true,
+    meta: { requiresAuth: true, role: 'administrador' }
+  },
+  {
+    path: "/edit-empleado/:id",
+    name: "edit-empleado",
+    component: EditEmployeView,
     props: true,
     meta: { requiresAuth: true, role: 'administrador' }
   },

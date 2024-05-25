@@ -6,28 +6,27 @@
                     <v-col cols="12" md="8">
                         <v-card class="elevation-12 rounded-lg transparent-card">
                             <v-card-text class="pa-5 mb-5">
-                                <h2 class="text-center mb-10 black--text font-weight-light">LISTADO DE PROPIETARIOS</h2>
+                                <h2 class="text-center mb-10 black--text font-weight-light">LISTADO DE EMPLEADOS</h2>
                                 <v-list>
                                     <v-list-item 
-                                        v-for="(propietario, index) in propietarios" 
-                                        :key="propietario.id_perfilUsuario" 
+                                        v-for="(empleado, index) in empleados" 
+                                        :key="empleado.id_perfilUsuario" 
                                         :class="['list-item', {'alt-row': index % 2 === 1}]"
                                         two-line
                                     >
                                         <v-row class="d-flex align-center" style="width: 100%;">
                                             <v-col cols="9">
                                                 <v-list-item-content>
-                                                    <v-list-item-title>{{ index + 1 }}. {{ propietario.nombre }} {{ propietario.apellidos }}</v-list-item-title>
-                                                    <v-list-item-subtitle>Id: {{ propietario.id_perfilUsuario }}</v-list-item-subtitle>
-                                                    <v-list-item-subtitle>{{ propietario.telefono }} - {{ propietario.email }}</v-list-item-subtitle>
-                                                    <v-list-item-subtitle>Usuario: {{ propietario.username }}</v-list-item-subtitle>
+                                                    <v-list-item-title>{{ index + 1 }}. {{ empleado.nombre }} {{ empleado.apellidos }}</v-list-item-title>
+                                                    <v-list-item-subtitle>Id: {{ empleado.id_perfilUsuario }}</v-list-item-subtitle>
+                                                    <v-list-item-subtitle>{{ empleado.telefono }} - {{ empleado.email }}</v-list-item-subtitle>
+                                                    <v-list-item-subtitle>Usuario: {{ empleado.username }}</v-list-item-subtitle>
                                                 </v-list-item-content>
                                             </v-col>
                                             <v-col cols="2" class="d-flex justify-end">
-                                                <v-btn color="amber" rounded large block class="mr-2" @click="editPropietario(propietario.id_perfilUsuario)">Editar</v-btn>
-                                                <v-btn color="red" rounded large block class="ml-2" @click="deletePropietario(propietario.id_perfilUsuario)">Eliminar</v-btn>
+                                                <v-btn color="amber" rounded large block @click="editEmpleado(empleado.id_perfilUsuario)">Editar</v-btn>
+                                                <v-btn color="red" rounded large block class="ml-2" @click="deleteEmpleado(empleado.id_perfilUsuario)">Eliminar</v-btn>                                    
                                             </v-col>
-
                                         </v-row>
                                     </v-list-item>
                                 </v-list>
@@ -51,33 +50,33 @@ import api from '../services/api';
 export default {
     data() {
         return {
-            propietarios: []
+            empleados: []
         };
     },
     created() {
-        this.fetchPropietarios();
+        this.fetchEmpleados();
     },
     methods: {
-        async fetchPropietarios() {
+        async fetchEmpleados() {
             try {
-                const response = await api.get('/propietarios');
-                this.propietarios = response.data;
+                const response = await api.get('/empleados');
+                this.empleados = response.data;
             } catch (error) {
-                console.error('Error cargando los datos de los propietarios', error);
+                console.error('Error cargando los datos de los empleados', error);
             }
         },
-        async deletePropietario(id) {
-            if (confirm("¿Estás seguro de que deseas eliminar este propietario?")) {
+        async deleteEmpleado(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar este empleado?")) {
                 try {
-                    await api.delete(`/propietarios/${id}`);
-                    this.propietarios = this.propietarios.filter(propietario => propietario.id_perfilUsuario !== id);
+                    await api.delete(`/empleados/${id}`);
+                    this.empleados = this.empleados.filter(empleado => empleado.id_perfilUsuario !== id);
                 } catch (error) {
-                    console.error('Error eliminando el propietario', error);
+                    console.error('Error eliminando el empleado', error);
                 }
             }
         },
-        editPropietario(id) {
-            this.$router.push({ name: 'edit-propietario', params: { id } });
+        editEmpleado(id) {
+            this.$router.push({ name: 'edit-empleado', params: { id } });
         },
         goBack() {
             this.$router.go(-1); 
@@ -85,7 +84,6 @@ export default {
     }
 };
 </script>
-
 <style scoped>
 html,
 body,
@@ -133,6 +131,7 @@ body,
 }
 
 .list-item {
-    margin-bottom: 2rem; /* Añadir un margen inferior para el espacio */
+    margin-bottom: 2rem; 
 }
 </style>
+

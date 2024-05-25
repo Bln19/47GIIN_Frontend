@@ -8,11 +8,13 @@
                         <v-card-actions>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-btn @click="goToRegister" color="primary" block class="mb-2">Registrar Nuevo
-                                        Usuario</v-btn>
+                                    <v-btn @click="goToRegister" class="rounded-btn admin-border mb-2" block>Registrar Nuevo Usuario</v-btn>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-btn @click="goToOwnersList" color="secondary" block>Propietarios</v-btn>
+                                    <v-btn @click="goToOwnersList" class="rounded-btn owner-border" block>Propietarios</v-btn>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-btn @click="goToEmployesList" class="rounded-btn employee-border" block>Empleados</v-btn>
                                 </v-col>
                             </v-row>
                         </v-card-actions>
@@ -32,7 +34,6 @@
         </v-container>
     </v-app>
 </template>
-
 <script>
 import api from '../services/api';
 import { mapActions } from 'vuex';
@@ -78,7 +79,7 @@ export default {
                 });
         },
         goToRegister() {
-            const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion')); // Cambiado a localStorage
+            const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion'));
             if (urbanizacion) {
                 this.$router.push({ name: 'register', params: { id: urbanizacion.id } });
             } else {
@@ -86,9 +87,17 @@ export default {
             }
         },
         goToOwnersList() {
-            const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion')); // Cambiado a localStorage
+            const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion'));
             if (urbanizacion) {
                 this.$router.push({ name: 'propietarios', params: { id: urbanizacion.id } });
+            } else {
+                console.error('No se encontró la urbanización en localStorage');
+            }
+        },
+        goToEmployesList() {
+            const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion'));
+            if (urbanizacion) {
+                this.$router.push({ name: 'empleados', params: { id: urbanizacion.id } });
             } else {
                 console.error('No se encontró la urbanización en localStorage');
             }
@@ -96,3 +105,27 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.rounded-btn {
+    border-radius: 25px;
+    border: 2px solid;
+    background-color: transparent;
+}
+
+.admin-border {
+    border-color: #3f51b5;
+    color: #3f51b5;
+}
+
+.owner-border {
+    border-color: #ff5722;
+    color: #ff5722;
+}
+
+.employee-border {
+    border-color: #1a7b82;
+    color: #1a7b82;
+}
+</style>
+

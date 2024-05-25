@@ -108,8 +108,8 @@ export default {
             if (this.$refs.form.validate()) {
                 const urbanization = JSON.parse(localStorage.getItem('urbanizacion'));
                 if (!urbanization || !urbanization.id_urbanizacion) {
-                    this.error = 'No se encontró la urbanización en localStorage';
-                    console.error('No se encontró la urbanización en localStorage');
+                    this.error = 'No se encontró la urbanización';
+                    console.error('No se encontró la urbanización');
                     return;
                 }
 

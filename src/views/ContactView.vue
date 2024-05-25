@@ -17,14 +17,46 @@
           <div class="content">Calle Universidad 1, Valencia (España)</div>
         </li>
       </ul>
+      <v-btn 
+        :color="buttonColor" 
+        rounded
+        large
+        block
+        @click="handleClick" 
+        @mouseover="changeColor" 
+        @mouseleave="revertColor"
+        class="mb-2">VOLVER
+      </v-btn>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "ContactView"
- 
+  name: "ContactView",
+  data() {
+    return {
+      buttonColor: 'red darken-3',
+    }
+  },
+  methods: {
+    changeColor(){
+      this.buttonColor = "teal darken-4";
+    },
+    revertColor(){
+      this.buttonColor = "red darken-3";
+    },
+    handleClick() {
+      this.login();
+      this.goBack();
+    },
+    login() {
+      // Aquí va el código para la función de login
+    },
+    goBack() {
+      this.$router.go(-1);
+    }
+  }
 }
 </script>
 
@@ -56,7 +88,6 @@ ul {
   list-style: none;
   padding: 0;
   margin: 0;
-
 }
 
 .info-item {
@@ -69,19 +100,19 @@ ul {
   flex: 1;
   align-items: center;
   margin-right: 20px;
-
 }
 
 .content {
   flex: 2; 
   text-align: justify; 
-  
 }
-.fas{
+
+.fas {
   margin-right: 20px;
-  color:#037764;
+  color: #037764;
 }
-.header-title{
+
+.header-title {
   background-color: #037764;
   color: white;
   padding: 10px 20px;
