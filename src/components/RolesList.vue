@@ -6,32 +6,28 @@
                     <v-col cols="12" md="8">
                         <v-card class="elevation-12 rounded-lg transparent-card">
                             <v-card-text class="pa-5 mb-5">
-                                <h2 class="text-center mb-10 black--text font-weight-light">LISTADO DE ROLES</h2>
+                                <h2 class="text-center mb-10 black--text font-weight-light">LISTADO DE TODOS LOS ROLES</h2>
                                 <v-list>
-                                    <v-list-item 
-                                        v-for="(role, index) in roles" 
-                                        :key="role.id_rol" 
-                                        :class="['list-item', {'alt-row': index % 2 === 1}]"
-                                        two-line
-                                    >
+                                    <v-list-item v-for="(rol, index) in roles" :key="rol.id_rol" :class="['list-item', { 'alt-row': index % 2 === 1 }]" two-line>
                                         <v-row class="d-flex align-center" style="width: 100%;">
-                                            <v-col cols="12">
+                                            <v-col cols="8">
                                                 <v-list-item-content>
-                                                    <v-list-item-title>{{ index + 1 }}. {{ role.nombre }}</v-list-item-title>
-                                                    <v-list-item-subtitle>Id: {{ role.id_rol }}</v-list-item-subtitle>
+                                                    <v-list-item-title>{{ rol.nombre }}</v-list-item-title>
                                                 </v-list-item-content>
+                                            </v-col>
+                                            <v-col cols="4" class="d-flex justify-end">
+                                                <v-btn color="amber" rounded class="mr-2 small-btn" @click="editRol(rol.id_rol)">Editar</v-btn>
+                                                <v-btn color="red" rounded class="ml-2 small-btn" @click="deleteRol(rol.id_rol)">Eliminar</v-btn>
                                             </v-col>
                                         </v-row>
                                     </v-list-item>
                                 </v-list>
                                 <v-row justify="center">
-                                    <v-col cols="8" md="4">
-                                        <v-btn :color="buttonColor" rounded large block @click="goToAddRole" @mouseover="changeColor" @mouseleave="revertColor" class="mb-2">Añadir Rol</v-btn>
+                                    <v-col cols="1" md="3" class="text-center">
+                                        <v-btn :color="buttonColor" rounded block class="mb-2 small-btn" @click="addRol" @mouseover="changeColor" @mouseleave="revertColor">Añadir Rol</v-btn>
                                     </v-col>
-                                </v-row>
-                                <v-row justify="center">
-                                    <v-col cols="8" md="4">
-                                        <v-btn color="secondary" rounded large block @click="goBack" class="mb-2">Volver</v-btn>
+                                    <v-col cols="1" md="2" class="text-center">
+                                        <v-btn color="secondary" rounded block @click="goBack" class="mb-2 small-btn">Volver</v-btn>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
@@ -50,9 +46,7 @@ export default {
     data() {
         return {
             roles: [],
-            buttonColor: 'red darken-3',
-            success: null,
-            error: null
+            buttonColor: 'primary'
         };
     },
     created() {
@@ -61,28 +55,38 @@ export default {
     methods: {
         async fetchRoles() {
             try {
-                const response = await api.get('/roles');
+                const response = await api.get('/roles/all');
                 this.roles = response.data;
             } catch (error) {
-                console.error('Error cargando los datos de los roles', error);
+                console.error('Error cargando los roles', error);
             }
         },
-        async goToAddRole() {
-            const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion'));
-            if (urbanizacion) {
-                this.$router.push({ name: 'add-role', params: { id: urbanizacion.id } });
-            } else {
-                console.error('No se encontró la urbanización en localStorage');
+        async deleteRol(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar este rol?")) {
+                try {
+                    const response = await api.delete(`/roles/${id}`);
+                    this.roles = this.roles.filter(rol => rol.id_rol !== id);
+                    alert(response.data.success);
+                } catch (error) {
+                    console.error('Error eliminando el rol', error);
+                    alert('Error eliminando el rol');
+                }
             }
         },
-        changeColor() {
-            this.buttonColor = "teal darken-4";
+        editRol(id) {
+            this.$router.push({ name: 'edit-rol', params: { id } });
         },
-        revertColor() {
-            this.buttonColor = "red darken-3";
+        addRol() {
+            this.$router.push({ name: 'add-rol' });
         },
         goBack() {
-            this.$router.go(-1); 
+            this.$router.go(-1);
+        },
+        changeColor() {
+            this.buttonColor = "red darken-3 ";
+        },
+        revertColor() {
+            this.buttonColor = "teal darken-4";
         }
     }
 };
@@ -135,6 +139,10 @@ body,
 }
 
 .list-item {
-    margin-bottom: 2rem; /* Añadir un margen inferior para el espacio */
+    margin-bottom: 2rem;
+}
+
+.small-btn {
+    min-width: 100px;
 }
 </style>

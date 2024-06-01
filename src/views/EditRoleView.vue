@@ -6,7 +6,7 @@
                     <v-col cols="12" md="6">
                         <v-card class="elevation-12 rounded-lg">
                             <v-card-text class="pa-5 mb-5">
-                                <h2 class="text-center mb-10 black--text font-weight-light">AÑADIR NUEVO PERMISO</h2>
+                                <h2 class="text-center mb-10 black--text font-weight-light">EDITAR ROL</h2>
                                 
                                 <v-form ref="form">
                                     <div class="mt-5 mb-5">
@@ -14,33 +14,14 @@
                                             <font-awesome-icon :icon="['fas', 'key']" class="black--text mr-3" />
                                             <label class="label-large black--text">Nombre</label>
                                         </div>
-                                        <v-text-field v-model="permiso.nombre" outlined
+                                        <v-text-field v-model="rol.nombre" outlined
                                             class="black--text flex-grow-1" :rules="[rules.required]">
                                         </v-text-field>
                                     </div>
-                                    <div class="mt-5 mb-5">
-                                        <div class="d-flex align-center mb-2">
-                                            <font-awesome-icon :icon="['fas', 'file-alt']" class="black--text mr-3" />
-                                            <label class="label-large black--text">Descripción</label>
-                                        </div>
-                                        <v-textarea v-model="permiso.descripcion" outlined
-                                            class="black--text flex-grow-1" :rules="[rules.required]">
-                                        </v-textarea>
-                                    </div>
-                                    <div class="mt-5 mb-5">
-                                        <div class="d-flex align-center mb-2">
-                                            <font-awesome-icon :icon="['fas', 'users']" class="black--text mr-3" />
-                                            <label class="label-large black--text">Roles</label>
-                                        </div>
-                                        <div v-for="role in roles" :key="role.value" class="ml-5">
-                                            <v-checkbox v-model="permiso.roles" :label="role.text" :value="role.value" hide-details>
-                                            </v-checkbox>
-                                        </div>
-                                    </div>
                                     <v-row justify="center">
                                         <v-col cols="8" md="4">
-                                            <v-btn :color="buttonColor" rounded large block @click="addPermiso"
-                                                @mouseover="changeColor" @mouseleave="revertColor" class="mb-2">AÑADIR</v-btn>
+                                            <v-btn :color="buttonColor" rounded large block @click="updateRol"
+                                                @mouseover="changeColor" @mouseleave="revertColor" class="mb-2">ACTUALIZAR</v-btn>
                                         </v-col>
                                         <v-col cols="8" md="4">
                                             <v-btn color="secondary" rounded large block @click="goBack" class="mb-2">Volver</v-btn>
@@ -63,19 +44,22 @@ import api from '../services/api';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default {
-    name: 'PermissionsForm',
+    name: 'EditRoleView',
     components: {
         FontAwesomeIcon
+    },
+    props: {
+        id: {
+            type: Number,
+            required: true
+        }
     },
     data() {
         return {
             buttonColor: 'red darken-3',
-            permiso: {
-                nombre: '',
-                descripcion: '',
-                roles: []
+            rol: {
+                nombre: ''
             },
-            roles: [],
             error: null,
             success: null,
             rules: {
@@ -84,45 +68,34 @@ export default {
         };
     },
     created() {
-        this.fetchRoles();
+        this.fetchRol();
     },
     methods: {
-        async fetchRoles() {
+        async fetchRol() {
             try {
-                const response = await api.get('/roles/all');
-                this.roles = response.data.map(role => ({
-                    text: role.nombre,
-                    value: role.id_rol
-                }));
-                console.log("Roles fetched:", JSON.stringify(this.roles));
+                const response = await api.get(`/roles/${this.id}`);
+                this.rol = response.data;
             } catch (error) {
-                console.error('Error cargando los roles', error);
-                this.error = 'Error cargando los roles';
+                console.error('Error cargando el rol', error);
             }
         },
-        async addPermiso() {
+        async updateRol() {
+            console.log("Updating rol...");
             this.error = null;
             this.success = null;
             if (this.$refs.form.validate()) {
                 const requestData = {
-                    nombre: this.permiso.nombre,
-                    descripcion: this.permiso.descripcion,
-                    roles: [...this.permiso.roles] 
+                    nombre: this.rol.nombre
                 };
                 console.log("Request data:", requestData);
 
                 try {
-                    const response = await api.post('/permisos', requestData);
+                    const response = await api.put(`/roles/${this.id}`, requestData);
                     if (response.data.success) {
-                        this.success = 'Permiso añadido exitosamente';
-                        this.permiso = {
-                            nombre: '',
-                            descripcion: '',
-                            roles: []
-                        };
-                        this.$router.push({ name: 'permissions', params: { id: response.data.id_urbanizacion } });
+                        this.success = 'Rol actualizado exitosamente';
+                        this.$router.go(-1);  // Redirigir a la página anterior
                     } else {
-                        this.error = response.data.error || 'Error al añadir el permiso';
+                        this.error = response.data.error || 'Error al actualizar el rol';
                     }
                 } catch (error) {
                     this.error = 'Error en la solicitud: ' + error.message;
@@ -137,14 +110,6 @@ export default {
         },
         goBack() {
             this.$router.go(-1);
-        }
-    },
-    watch: {
-        'permiso.roles': {
-            handler(newVal) {
-                console.log('Roles seleccionados:', JSON.stringify(newVal));
-            },
-            deep: true
         }
     }
 };

@@ -6,7 +6,9 @@ import UrbanizationView from '../views/UrbanizationView.vue';
 import EditOwnerView from '../views/EditOwnerView.vue';
 import EditEmployeView from '../views/EditEmployeView.vue';
 import PermissionsView from '../views/PermissionsView.vue';
+import EditRoleView from '../views/EditRoleView.vue';
 import EditPermissionsView from '../views/EditPermissionsView.vue';
+
 
 
 import LoginForm from '../components/LoginForm.vue';
@@ -15,6 +17,7 @@ import UserRegisterForm from '../components/UserRegisterForm.vue';
 import OwnerList from '../components/OwnerList.vue';
 import EmployesList from '../components/EmployesList.vue';
 import RolesList from '../components/RolesList.vue';
+import RoleRegisterForm from '../components/RoleRegisterForm.vue';
 import PermissionsList from '../components/PermissionsList.vue';
 import PermissionsForm from '../components/PermissionsForm.vue';
 
@@ -102,10 +105,25 @@ const routes = [
   },
   {
     path: '/roles/:id/permisos',
-    name: 'permissions',
-    component: PermissionsView, // Usa la vista consolidada para esta ruta
+    name: 'permissions-role',
+    component: PermissionsView,
     props: true,
     meta: { requiresAuth: true, role: 'administrador' },
+  },
+  {
+    path: '/roles/add',
+    name: 'add-rol',
+    component: RoleRegisterForm,
+    props: true,
+    meta: { requiresAuth: true, role: 'administrador' },
+  },
+  {
+    path: '/roles/:id/edit',
+    name: 'edit-rol',
+    component: EditRoleView,
+    props: true,
+    meta: {requiresAuth: true, role: 'administrador'},
+
   },
   {
     path: '/permissions/:id',

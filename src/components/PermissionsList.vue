@@ -72,7 +72,7 @@ export default {
             }
             return lines;
         },
-        async deletePermiso(id) {
+            async deletePermiso(id) {
             if (confirm("¿Estás seguro de que deseas eliminar este permiso?")) {
                 try {
                     const response = await api.delete(`/permisos/${id}`);

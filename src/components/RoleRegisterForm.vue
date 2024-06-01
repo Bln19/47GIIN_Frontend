@@ -1,19 +1,27 @@
 <template>
     <v-app style="height: 100vh;">
         <v-main>
-            <v-container fluid class="transparent-container">
+            <v-container fluid>
                 <v-row justify="center">
                     <v-col cols="12" md="6">
-                        <v-card class="elevation-12 rounded-lg transparent-card">
+                        <v-card class="elevation-12 rounded-lg">
                             <v-card-text class="pa-5 mb-5">
                                 <h2 class="text-center mb-10 black--text font-weight-light">AÑADIR NUEVO ROL</h2>
-                                <v-form ref="form" @submit.prevent="addRole">
-                                    <v-text-field v-model="roleName" label="Nombre del Rol" outlined
-                                        class="black--text flex-grow-1" :rules="[rules.required]">
-                                    </v-text-field>
+                                
+                                <v-form ref="form">
+                                    <div class="mt-5 mb-5">
+                                        <div class="d-flex align-center mb-2">
+                                            <font-awesome-icon :icon="['fas', 'key']" class="black--text mr-3" />
+                                            <label class="label-large black--text">Nombre</label>
+                                        </div>
+                                        <v-text-field v-model="rol.nombre" outlined
+                                            class="black--text flex-grow-1" :rules="[rules.required]">
+                                        </v-text-field>
+                                    </div>
                                     <v-row justify="center">
                                         <v-col cols="8" md="4">
-                                            <v-btn :color="buttonColor" rounded large block type="submit" @mouseover="changeColor" @mouseleave="revertColor" class="mb-2">Añadir</v-btn>
+                                            <v-btn :color="buttonColor" rounded large block @click="addRol"
+                                                @mouseover="changeColor" @mouseleave="revertColor" class="mb-2">AÑADIR</v-btn>
                                         </v-col>
                                         <v-col cols="8" md="4">
                                             <v-btn color="secondary" rounded large block @click="goBack" class="mb-2">Volver</v-btn>
@@ -33,13 +41,19 @@
 
 <script>
 import api from '../services/api';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default {
     name: 'RoleRegisterForm',
+    components: {
+        FontAwesomeIcon
+    },
     data() {
         return {
-            roleName: '',
             buttonColor: 'red darken-3',
+            rol: {
+                nombre: ''
+            },
             error: null,
             success: null,
             rules: {
@@ -48,30 +62,30 @@ export default {
         };
     },
     methods: {
-        async addRole() {
+        async addRol() {
+            console.log("Adding rol...");
             this.error = null;
             this.success = null;
-            const urbanization = JSON.parse(localStorage.getItem('urbanizacion'));
-            if (!urbanization || !urbanization.id_urbanizacion) {
-                this.error = 'No se encontró la urbanización';
-                console.error('No se encontró la urbanización');
-                return;
-            }
+            if (this.$refs.form.validate()) {
+                const requestData = {
+                    nombre: this.rol.nombre
+                };
+                console.log("Request data:", requestData);
 
-            const requestData = {
-                nombre: this.roleName
-            };
-
-            try {
-                const response = await api.post('/roles', requestData);
-                if (response.data.success) {
-                    this.success = 'Rol añadido exitosamente';
-                    this.$router.push({ name: 'roles', params: { id: urbanization.id } });
-                } else {
-                    this.error = response.data.error || 'Error al añadir rol';
+                try {
+                    const response = await api.post('/roles', requestData);
+                    if (response.data.success) {
+                        this.success = 'Rol añadido exitosamente';
+                        this.rol = {
+                            nombre: ''
+                        };
+                        this.$router.push({ name: 'roles', params: {id: response.data.id_urbanizacion}});
+                    } else {
+                        this.error = response.data.error || 'Error al añadir el rol';
+                    }
+                } catch (error) {
+                    this.error = 'Error en la solicitud: ' + error.message;
                 }
-            } catch (error) {
-                this.error = 'Error en la solicitud: ' + error.message;
             }
         },
         changeColor() {
@@ -81,37 +95,15 @@ export default {
             this.buttonColor = "red darken-3";
         },
         goBack() {
-            this.$router.go(-1); // Volver a la página anterior
+            this.$router.go(-1);
         }
     }
 };
 </script>
 
 <style scoped>
-html,
-body,
-#app {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
 .v-main {
-    background: url('@/assets/background_2.jpg') no-repeat center center fixed;
-    background-size: cover;
-}
-
-.transparent-container {
-    margin: auto;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.transparent-card {
-    background-color: rgba(255, 255, 255, 0.6) !important;
+    background: none;
 }
 
 .rounded-lg {
@@ -132,5 +124,10 @@ body,
 
 .black--text {
     color: rgb(8, 8, 8);
+}
+
+.label-large {
+    font-size: 1rem;
+    font-weight: bold;
 }
 </style>

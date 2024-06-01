@@ -27,7 +27,7 @@
             <router-link :to="'/contact'" class="nav-link">Contacto</router-link>
           </li>
           <li class="nav-item">
-            <router-link :to="'/'" class="nav-link">Home</router-link>
+            <router-link :to="homeRoute" class="nav-link">Home</router-link>
           </li>
         </ul>
       </div>
@@ -42,17 +42,19 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   computed: {
     ...mapGetters(['isAuthenticated', 'urbanizacion', 'role']),
+    homeRoute() {
+      return this.isAuthenticated ? `/dashboard/${this.urbanizacion.id}` : '/';
+    }
   },
   methods: {
     ...mapActions(['logout']),
     handleLogout() {
-      this.logout(); // Llamar a la acción logout de Vuex
-      this.$router.push({ name: 'home' }); // Redirigir a la vista home
+      this.logout();
+      this.$router.push({ name: 'home' });
     }
   },
   watch: {
     '$route'() {
-      // Actualiza el estado en cada cambio de ruta
       this.isAuthenticated = this.$store.getters.isAuthenticated;
       this.urbanizacion = this.$store.getters.urbanizacion;
       this.role = this.$store.getters.role;
