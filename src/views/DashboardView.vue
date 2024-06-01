@@ -19,6 +19,9 @@
                                 <v-col cols="12">
                                     <v-btn @click="goToRolesList" class="rounded-btn role-border" block>Roles</v-btn>
                                 </v-col>
+                                <v-col cols="12">
+                                    <v-btn @click="goToPermissionsList" class="rounded-btn permission-border" block>Permisos</v-btn>
+                                </v-col>
                             </v-row>
                         </v-card-actions>
                     </v-card>
@@ -112,7 +115,17 @@ export default {
             } else {
                 console.error('No se encontró la urbanización en localStorage');
             }
+        },
+        goToPermissionsList(){
+            const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion'));
+            if (urbanizacion) {
+                this.$router.push({ name: 'permissions', params: { id: urbanizacion.id } });
+            } else {
+                console.error('No se encontró la urbanización en localStorage');
+            }
+
         }
+
     }
 };
 </script>
@@ -140,9 +153,13 @@ export default {
 }
 
 .role-border{
-    border-color: #c26004;
-    color: #c26004;
+    border-color: #b5623f;
+    color: #b5623f;
+}
+.permission-border{
+    border-color: #943fb5;
+    color: #943fb5;
+
 }
 
 </style>
-
