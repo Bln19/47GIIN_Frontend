@@ -11,6 +11,10 @@
                                 <v-col cols="12">
                                     <v-btn @click="goToRegisterUrbanization" class="rounded-btn superadmin-border mb-2" block>Registrar Nueva Urbanización</v-btn>
                                 </v-col>
+                                <v-col cols="12">
+                                    <v-btn @click="goToCountryList" class="rounded-btn superadmin-border mb-2" block>Paises</v-btn>
+                                </v-col>
+
                             </v-row>
                         </v-card-actions>
                     </v-card>
@@ -141,6 +145,9 @@ export default {
         },
         goToRegisterUrbanization() {
             this.$router.push({ name: 'add-urbanizacion' });
+        },
+        goToCountryList() {
+            this.$router.push({ name: 'list-country' });
         }
 
     }

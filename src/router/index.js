@@ -8,6 +8,9 @@ import EditEmployeView from '../views/EditEmployeView.vue';
 import PermissionsView from '../views/PermissionsView.vue';
 import EditRoleView from '../views/EditRoleView.vue';
 import EditPermissionsView from '../views/EditPermissionsView.vue';
+import EditCountryView from '../views/EditCountryView.vue';
+
+
 
 
 
@@ -23,6 +26,8 @@ import PermissionsForm from '../components/PermissionsForm.vue';
 import RegisterUrbanizationForm from '../components/RegisterUrbanizationForm.vue';
 import CityForm from '../components/CityForm.vue';
 import CountryForm from '../components/CountryForm.vue';
+import CountryList from '../components/CountryList.vue';
+
 
 
 import store from '../store';
@@ -167,6 +172,19 @@ const routes = [
     path: '/add-country',
     name: 'add-country',
     component: CountryForm,
+    meta: { requiresAuth: true, role: 'superadmin' },
+  },
+  {
+    path: '/countries',
+    name: 'list-country',
+    component: CountryList,
+    meta: { requiresAuth: true, role: 'superadmin' },
+  },
+  {
+    path: '/country/edit/:id',
+    name: 'edit-country',
+    component: EditCountryView,
+    props: true,
     meta: { requiresAuth: true, role: 'superadmin' },
   },
 
