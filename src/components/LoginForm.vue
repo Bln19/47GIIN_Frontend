@@ -31,7 +31,7 @@
                   rounded
                   large
                   block
-                  @click="login" 
+                  @click="makeLogin" 
                   @mouseover="changeColor" 
                   @mouseleave="revertColor"
                   class="mb-2">ENTRAR</v-btn>
@@ -48,6 +48,7 @@
 <script>
 import api from '../services/api';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { mapActions } from 'vuex'
 
 export default {
   name: 'LoginForm',
@@ -69,7 +70,8 @@ export default {
     };
   },
   methods: {
-    async login() {
+    ...mapActions(['login']),
+    async makeLogin() {
       this.errors.username = this.credentials.username ? null : "El nombre de usuario es obligatorio.";
       this.errors.password = this.credentials.password ? null : "La contraseña es obligatoria.";
 
@@ -79,18 +81,30 @@ export default {
             username: this.credentials.username,
             password: this.credentials.password
           });
-          console.log("Respuesta del servidor:", response);
+
+          console.log("Respuesta del servidor:", JSON.stringify(response));
 
           if (response.data.access_token) {
-            console.log("Datos de la urbanización recibidos:", response.data.urbanizacion);
+            console.log("Datos del usuario recibidos:", JSON.stringify(response.data));
+
             localStorage.setItem('access_token', response.data.access_token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
             localStorage.setItem('role', response.data.user.role);
-            localStorage.setItem('urbanization', JSON.stringify(response.data.urbanizacion));
-            this.$router.push({ 
-              name: 'dashboard',
-              params: { id: response.data.urbanizacion.id }
-            });
+
+            if (response.data.urbanizacion) {
+              this.login(response.data.urbanizacion);
+              localStorage.setItem('urbanizacion', JSON.stringify(response.data.urbanizacion));
+              this.$router.push({ 
+                name: 'dashboard',
+                params: { id: response.data.urbanizacion.id }
+              });
+            } else {
+              this.login(null);
+              this.$router.push({ 
+                name: 'dashboard',
+                params: { id: 'superadmin' }
+              });
+            }
           } else {
             this.errors.login = response.data.error || "Credenciales incorrectas.";
           }

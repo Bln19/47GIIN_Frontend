@@ -20,14 +20,17 @@ import RolesList from '../components/RolesList.vue';
 import RoleRegisterForm from '../components/RoleRegisterForm.vue';
 import PermissionsList from '../components/PermissionsList.vue';
 import PermissionsForm from '../components/PermissionsForm.vue';
+import RegisterUrbanizationForm from '../components/RegisterUrbanizationForm.vue';
 
 
+import store from '../store';
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'home',
     component: HomeView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/contact',
@@ -49,7 +52,14 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: '/login',
+    path: '/register_urbanization',
+    name: 'add-urbanizacion',
+    component: RegisterUrbanizationForm,
+    meta: { requiresAuth: true, role: 'superadmin'},
+
+  },
+  {
+    path: '/',
     name: 'login',
     component: LoginForm,
   },
@@ -144,13 +154,26 @@ const routes = [
     name: 'add-permiso',
     component: PermissionsForm,
     meta: { requiresAuth: true, role: 'administrador' },
-  }
+  },
 
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = store.getters.isAuthenticated;
+  const role = store.getters.role;
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next({ name: 'login' });
+  } else if (to.meta.role && to.meta.role !== role) {
+    next({ name: 'home' });
+  } else {
+    next();
+  }
 });
 
 export default router;

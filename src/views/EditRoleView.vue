@@ -93,7 +93,7 @@ export default {
                     const response = await api.put(`/roles/${this.id}`, requestData);
                     if (response.data.success) {
                         this.success = 'Rol actualizado exitosamente';
-                        this.$router.go(-1);  // Redirigir a la página anterior
+                        this.$router.go(-1);
                     } else {
                         this.error = response.data.error || 'Error al actualizar el rol';
                     }

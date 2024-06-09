@@ -38,7 +38,7 @@ export default {
     },
     methods: {
         goBack() {
-            this.$router.go(-1); // Volver a la página anterior
+            this.$router.go(-1);
         }
     }
 };
@@ -64,7 +64,6 @@ body,
 
 .transparent-card {
     background-color: rgba(255, 255, 255, 0.6) !important;
-    /* Ajustar transparencia */
 }
 
 .rounded-lg {

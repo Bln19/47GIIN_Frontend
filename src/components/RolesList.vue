@@ -16,6 +16,7 @@
                                                 </v-list-item-content>
                                             </v-col>
                                             <v-col cols="4" class="d-flex justify-end">
+                                                <v-btn color="blue" rounded class="mr-2 small-btn" @click="viewPermisos(rol.id_rol)">Ver Permisos</v-btn>
                                                 <v-btn color="amber" rounded class="mr-2 small-btn" @click="editRol(rol.id_rol)">Editar</v-btn>
                                                 <v-btn color="red" rounded class="ml-2 small-btn" @click="deleteRol(rol.id_rol)">Eliminar</v-btn>
                                             </v-col>
@@ -75,6 +76,9 @@ export default {
         },
         editRol(id) {
             this.$router.push({ name: 'edit-rol', params: { id } });
+        },
+        viewPermisos(id) {
+            this.$router.push({ name: 'permissions-role', params: { id } });
         },
         addRol() {
             this.$router.push({ name: 'add-rol' });

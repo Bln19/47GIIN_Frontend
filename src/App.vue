@@ -14,7 +14,7 @@
           <li class="nav-item" v-if="!isAuthenticated">
             <router-link :to="'/login'" class="nav-link">Login</router-link>
           </li>
-          <li class="nav-item" v-if="isAuthenticated">
+          <li class="nav-item" v-if="isAuthenticated && urbanizacion">
             <router-link :to="`/urbanization/${urbanizacion.id}`" class="nav-link">La Urbanización</router-link>
           </li>
           <!-- <li class="nav-item" v-if="isAuthenticated && role === 'administrador'">
@@ -26,7 +26,7 @@
           <li class="nav-item" v-if="!isAuthenticated">
             <router-link :to="'/contact'" class="nav-link">Contacto</router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item"  v-if="isAuthenticated && urbanizacion">
             <router-link :to="homeRoute" class="nav-link">Home</router-link>
           </li>
         </ul>
@@ -53,13 +53,13 @@ export default {
       this.$router.push({ name: 'home' });
     }
   },
-  watch: {
-    '$route'() {
-      this.isAuthenticated = this.$store.getters.isAuthenticated;
-      this.urbanizacion = this.$store.getters.urbanizacion;
-      this.role = this.$store.getters.role;
-    }
-  }
+  // watch: {
+  //   '$route'() {
+  //     this.isAuthenticated = this.$store.getters.isAuthenticated;
+  //     this.urbanizacion = this.$store.getters.urbanizacion;
+  //     this.role = this.$store.getters.role;
+  //   }
+  // }
 };
 </script>
 

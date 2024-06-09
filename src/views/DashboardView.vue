@@ -2,6 +2,20 @@
     <v-app>
         <v-container fluid>
             <v-row>
+
+                <v-col cols="12" md="4" v-if="role === 'superadmin'">
+                    <v-card class="mx-2 my-4 pa-3">
+                        <v-card-title class="d-flex justify-center mb-8 mt-4">SERVICIOS PARA SUPERADMIN</v-card-title>
+                        <v-card-actions>
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-btn @click="goToRegisterUrbanization" class="rounded-btn superadmin-border mb-2" block>Registrar Nueva Urbanización</v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-card-actions>
+                    </v-card>
+                </v-col>
+
                 <v-col cols="12" md="4" v-if="role === 'administrador'">
                     <v-card class="mx-2 my-4 pa-3">
                         <v-card-title class="d-flex justify-center mb-8 mt-4">SERVICIOS PARA ADMINISTRADORES</v-card-title>
@@ -75,7 +89,7 @@ export default {
             api.get(`/urbanizacion/${id}`)
                 .then(response => {
                     this.urbanizacion = response.data;
-                    localStorage.setItem('urbanizacion', JSON.stringify(this.urbanizacion)); // Almacenar en localStorage
+                    localStorage.setItem('urbanizacion', JSON.stringify(this.urbanizacion));
                     this.login(this.urbanizacion); 
                     this.loading = false;
                 })
@@ -124,6 +138,9 @@ export default {
                 console.error('No se encontró la urbanización en localStorage');
             }
 
+        },
+        goToRegisterUrbanization() {
+            this.$router.push({ name: 'add-urbanizacion' });
         }
 
     }

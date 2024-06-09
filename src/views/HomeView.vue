@@ -12,13 +12,13 @@
 }
 .background-logo-container {
   position: fixed;
-  top: 50%; /* Centrado vertical */
-  left: 50%; /* Centrado horizontal */
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  width: 600px; /* O el tamaño que prefieras para el logo */
-  height: 600px; /* O el tamaño que prefieras para el logo */
+  width: 600px;
+  height: 600px; 
   background: url('~@/assets/logo.png') no-repeat center center;
-  background-size: contain; /* Mantiene la relación de aspecto sin recortar */
-  z-index: 1000; /* Asegura que el logo esté sobre la mayoría de los otros elementos */
+  background-size: contain;
+  z-index: 1000;
 }
 </style>
