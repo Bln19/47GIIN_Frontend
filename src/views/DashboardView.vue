@@ -14,7 +14,9 @@
                                 <v-col cols="12">
                                     <v-btn @click="goToCountryList" class="rounded-btn superadmin-border mb-2" block>Paises</v-btn>
                                 </v-col>
-
+                                <v-col cols="12">
+                                    <v-btn @click="goToCityList" class="rounded-btn superadmin-border mb-2" block>Ciudades</v-btn>
+                                </v-col>
                             </v-row>
                         </v-card-actions>
                     </v-card>
@@ -148,6 +150,10 @@ export default {
         },
         goToCountryList() {
             this.$router.push({ name: 'list-country' });
+        },
+        goToCityList(){
+            this.$router.push({ name: 'list-city' });
+
         }
 
     }

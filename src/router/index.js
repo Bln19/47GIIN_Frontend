@@ -27,6 +27,8 @@ import RegisterUrbanizationForm from '../components/RegisterUrbanizationForm.vue
 import CityForm from '../components/CityForm.vue';
 import CountryForm from '../components/CountryForm.vue';
 import CountryList from '../components/CountryList.vue';
+import CityList from '../components/CityList.vue';
+
 
 
 
@@ -166,6 +168,12 @@ const routes = [
     path: '/add-city',
     name: 'add-city',
     component: CityForm,
+    meta: { requiresAuth: true, role: 'superadmin' },
+  },
+  {
+    path: '/cities',
+    name: 'list-city',
+    component: CityList,
     meta: { requiresAuth: true, role: 'superadmin' },
   },
   {
