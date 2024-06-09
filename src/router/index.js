@@ -21,6 +21,8 @@ import RoleRegisterForm from '../components/RoleRegisterForm.vue';
 import PermissionsList from '../components/PermissionsList.vue';
 import PermissionsForm from '../components/PermissionsForm.vue';
 import RegisterUrbanizationForm from '../components/RegisterUrbanizationForm.vue';
+import CityForm from '../components/CityForm.vue';
+import CountryForm from '../components/CountryForm.vue';
 
 
 import store from '../store';
@@ -154,6 +156,18 @@ const routes = [
     name: 'add-permiso',
     component: PermissionsForm,
     meta: { requiresAuth: true, role: 'administrador' },
+  },
+  {
+    path: '/add-city',
+    name: 'add-city',
+    component: CityForm,
+    meta: { requiresAuth: true, role: 'superadmin' },
+  },
+  {
+    path: '/add-country',
+    name: 'add-country',
+    component: CountryForm,
+    meta: { requiresAuth: true, role: 'superadmin' },
   },
 
 ];

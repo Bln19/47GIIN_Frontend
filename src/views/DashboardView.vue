@@ -67,7 +67,7 @@ export default {
         };
     },
     created() {
-        const user = JSON.parse(localStorage.getItem('user')); // Cambiado a localStorage
+        const user = JSON.parse(localStorage.getItem('user')); 
         if (user) {
             this.role = user.role;
         } else {
@@ -75,7 +75,7 @@ export default {
             this.role = null;
         }
 
-        const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion')); // Cambiado a localStorage
+        const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion')); 
         if (urbanizacion && urbanizacion.id === parseInt(this.$route.params.id, 10)) {
             this.urbanizacion = urbanizacion;
             this.loading = false;

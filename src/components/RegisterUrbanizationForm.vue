@@ -13,7 +13,6 @@
                                     <v-text-field v-model="urbanizacion.direccion" label="Dirección" outlined></v-text-field>
                                     <v-text-field v-model="urbanizacion.cod_postal" label="Código Postal" outlined></v-text-field>
                                     
-
                                     <v-file-input
                                         label="Seleccionar Logo"
                                         prepend-icon="mdi-camera"
@@ -23,7 +22,15 @@
 
                                     <v-row>
                                         <v-col>
-                                            <v-select v-model="selectedCityId" :items="ciudades" @update:modelValue="updateUrbanizacionCiudad" label="Nombre de la Ciudad" outlined item-title="nombre" item-value="id_ciudad" placeholder="Selecciona una ciudad"></v-select>
+                                            <v-select 
+                                                v-model="selectedCityId" 
+                                                :items="ciudades" 
+                                                @update:modelValue="updateUrbanizacionCiudad" 
+                                                label="Nombre de la Ciudad" 
+                                                outlined item-title="nombre" 
+                                                item-value="id_ciudad" 
+                                                placeholder="Selecciona una ciudad">
+                                            </v-select>
                                         </v-col>
                                         <v-col cols="auto">
                                             <v-btn color="teal darken-4" small icon class="rounded-square" @click="goToAddCity">
@@ -74,6 +81,7 @@ export default {
     },
     async mounted() {
         await this.fetchCiudades();
+        this.loadUrbanizationData();
     },
     methods: {
         async fetchCiudades() {
@@ -110,14 +118,15 @@ export default {
 
                 if (response.data.success) {
                     this.success = 'Urbanización registrada exitosamente';
-                    this.urbanizacion = {
-                        nombre: '',
-                        cif: '',
-                        direccion: '',
-                        cod_postal: '',
-                        id_ciudad: '',
-                    };
-                    this.logoFile = null;
+                    this.clearUrbanizationData();
+                    setTimeout(() => {
+                        const user = JSON.parse(localStorage.getItem('user'));
+                        if (user) {
+                            this.$router.push({ name: 'dashboard', params: { id: user.id } });
+                        } else {
+                            console.error('No se encontró el usuario en localStorage');
+                        }
+                    }, 1000);
                 } else {
                     this.error = response.data.error || 'Error al registrar urbanización';
                 }
@@ -129,10 +138,37 @@ export default {
             this.$router.go(-1);
         },
         goToAddCity() {
+            this.saveUrbanizationData();
             this.$router.push({ name: 'add-city' });
         },
         updateUrbanizacionCiudad() {
             this.urbanizacion.id_ciudad = this.selectedCityId;
+        },
+        saveUrbanizationData() {
+            localStorage.setItem('urbanizacionData', JSON.stringify(this.urbanizacion));
+            localStorage.setItem('logoFile', this.logoFile ? this.logoFile.name : '');
+        },
+        loadUrbanizationData() {
+            const savedData = localStorage.getItem('urbanizacionData');
+            if (savedData) {
+                this.urbanizacion = JSON.parse(savedData);
+            }
+            const savedLogoFile = localStorage.getItem('logoFile');
+            if (savedLogoFile) {
+                this.logoFile = savedLogoFile;
+            }
+        },
+        clearUrbanizationData() {
+            this.urbanizacion = {
+                nombre: '',
+                cif: '',
+                direccion: '',
+                cod_postal: '',
+                id_ciudad: '',
+            };
+            this.logoFile = null;
+            localStorage.removeItem('urbanizacionData');
+            localStorage.removeItem('logoFile');
         }
     },
 };
