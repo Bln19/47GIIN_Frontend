@@ -22,12 +22,14 @@
 
                                     <v-row>
                                         <v-col>
+                                            <!-- [{"ciudad_nombre":"Valencia","id_ciudad":1,"pais_nombre":"España"},{"ciudad_nombre":"Alicante","id_ciudad":2,"pais_nombre":"España"}] -->
                                             <v-select 
                                                 v-model="selectedCityId" 
                                                 :items="ciudades" 
                                                 @update:modelValue="updateUrbanizacionCiudad" 
                                                 label="Nombre de la Ciudad" 
-                                                outlined item-title="nombre" 
+                                                outlined 
+                                                item-title="ciudad_nombre" 
                                                 item-value="id_ciudad" 
                                                 placeholder="Selecciona una ciudad">
                                             </v-select>
@@ -86,6 +88,7 @@ export default {
     methods: {
         async fetchCiudades() {
             try {
+                // [{"ciudad_nombre":"Valencia","id_ciudad":1,"pais_nombre":"España"},{"ciudad_nombre":"Alicante","id_ciudad":2,"pais_nombre":"España"}]
                 const response = await api.get('/ciudades');
                 this.ciudades = response.data;
             } catch (error) {

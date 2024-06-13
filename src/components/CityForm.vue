@@ -12,6 +12,7 @@
 
                                     <v-row>
                                         <v-col>
+                                            <!-- [{"capital":"Madrid","id_pais":1,"nombre":"España"}] -->
                                             <v-select 
                                                 v-model="selectedPaisId" 
                                                 :items="paises" 
@@ -73,6 +74,7 @@ export default {
     methods: {
         async fetchPaises() {
             try {
+                // [{"capital":"Madrid","id_pais":1,"nombre":"España"}]
                 const response = await api.get('/paises');
                 this.paises = response.data;
             } catch (error) {
@@ -84,7 +86,6 @@ export default {
             try {
                 this.ciudad.id_pais = this.selectedPaisId;
                 const response = await api.post('/add_ciudad', this.ciudad);
-
                 if (response.data.success) {
                     this.success = 'Ciudad registrada exitosamente';
                     this.clearCityData();

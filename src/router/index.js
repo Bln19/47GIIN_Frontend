@@ -10,6 +10,10 @@ import EditRoleView from '../views/EditRoleView.vue';
 import EditPermissionsView from '../views/EditPermissionsView.vue';
 import EditCountryView from '../views/EditCountryView.vue';
 import EditCityView from '../views/EditCityView.vue';
+import UrbanizationListView from '../views/UrbanizationListView.vue';
+import UrbanizationInformationView from '../views/UrbanizationInformationView.vue';
+import EditUrbanizationView from '../views/EditUrbanizationView.vue';
+
 
 
 
@@ -59,12 +63,30 @@ const routes = [
     props: true,
     meta: { requiresAuth: true },
   },
+
+  {
+    path: '/urbanizations',
+    name: 'list-urbanization',
+    component: UrbanizationListView
+  },
+  {
+    path: '/urbanizacion/:id',
+    name: 'urbanization-info',
+    component: UrbanizationInformationView,
+    props: true
+  },
   {
     path: '/register_urbanization',
     name: 'add-urbanizacion',
     component: RegisterUrbanizationForm,
     meta: { requiresAuth: true, role: 'superadmin'},
 
+  },
+  {
+    path: '/urbanizacion/:id/editar',
+    name: 'edit-urbanization',
+    component: EditUrbanizationView,
+    props: true
   },
   {
     path: '/',
