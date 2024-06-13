@@ -32,7 +32,7 @@ export default {
     },
     methods: {
         fetchUrbanizacion(id) {
-            axios.get(`http://localhost:4000/urbanizacion/${id}`)
+            axios.get(`http://localhost:5000/urbanizacion/${id}`)
                 .then(response => {
                     this.urbanizacionLocal = response.data;
                     this.loading = false;

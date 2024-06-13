@@ -106,6 +106,7 @@ export default {
             this.error = null;
             this.success = null;
             if (this.$refs.form.validate()) {
+                console.log(JSON.stringify(localStorage.getItem('urbanizacion')));
                 const urbanization = JSON.parse(localStorage.getItem('urbanizacion'));
                 if (!urbanization || !urbanization.id_urbanizacion) {
                     this.error = 'No se encontró la urbanización';

@@ -49,6 +49,7 @@ export default {
   methods: {
     ...mapActions(['logout']),
     handleLogout() {
+      localStorage.clear();
       this.logout();
       this.$router.push({ name: 'home' });
     }

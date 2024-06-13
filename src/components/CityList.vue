@@ -12,8 +12,8 @@
                                         <v-row class="d-flex align-center" style="width: 100%;">
                                             <v-col cols="6">
                                                 <v-list-item-content>
-                                                    <v-list-item-title>{{ ciudad.nombre }}</v-list-item-title>
-                                                    <v-list-item-subtitle>{{ ciudad.provincia }}</v-list-item-subtitle>
+                                                    <v-list-item-title>{{ ciudad.ciudad_nombre }}</v-list-item-title>
+                                                    <v-list-item-subtitle>{{ ciudad.pais_nombre }}</v-list-item-subtitle>
                                                 </v-list-item-content>
                                             </v-col>
                                             <v-col cols="6" class="d-flex justify-end">
@@ -65,8 +65,8 @@ export default {
                     this.ciudades = this.ciudades.filter(ciudad => ciudad.id_ciudad !== id);
                     alert(response.data.success);
                 } catch (error) {
-                    console.error('Error eliminando la ciudad', error);
-                    alert('Error eliminando la ciudad');
+
+                    alert('No se pueden eliminar ciudades que contienen urbanizaciones');
                 }
             }
         },

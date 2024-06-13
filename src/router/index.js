@@ -9,8 +9,7 @@ import PermissionsView from '../views/PermissionsView.vue';
 import EditRoleView from '../views/EditRoleView.vue';
 import EditPermissionsView from '../views/EditPermissionsView.vue';
 import EditCountryView from '../views/EditCountryView.vue';
-
-
+import EditCityView from '../views/EditCityView.vue';
 
 
 
@@ -168,6 +167,13 @@ const routes = [
     path: '/add-city',
     name: 'add-city',
     component: CityForm,
+    meta: { requiresAuth: true, role: 'superadmin' },
+  },
+  {
+    path: '/edit-city/:id',
+    name: 'edit-city',
+    component: EditCityView,
+    props: true,
     meta: { requiresAuth: true, role: 'superadmin' },
   },
   {

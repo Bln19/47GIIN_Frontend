@@ -82,10 +82,9 @@ export default {
         }
 
         const urbanizacion = JSON.parse(localStorage.getItem('urbanizacion')); 
-        if (urbanizacion && urbanizacion.id === parseInt(this.$route.params.id, 10)) {
-            this.urbanizacion = urbanizacion;
-            this.loading = false;
-        } else {
+        console.log(urbanizacion);
+        if (urbanizacion !== undefined) {
+            // Cuando no sea superAdmin
             this.fetchUrbanizacion(this.$route.params.id);
         }
     },
