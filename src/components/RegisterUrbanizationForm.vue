@@ -129,7 +129,7 @@ export default {
                         } else {
                             console.error('No se encontró el usuario en localStorage');
                         }
-                    }, 1000);
+                    }, 2000);
                 } else {
                     this.error = response.data.error || 'Error al registrar urbanización';
                 }

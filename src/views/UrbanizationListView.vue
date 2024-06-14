@@ -64,8 +64,12 @@ export default {
          if (confirm("¿Estás seguro de que deseas eliminar esta urbanización?")) {
             try {
                const response = await api.delete(`/urbanizacion/${id}`);
-               this.urbanizaciones = this.urbanizaciones.filter(urbanizacion => urbanizacion.id_urbanizacion !== id);
-               alert(response.data.success);
+               if (response.data.success) {
+                  this.urbanizaciones = this.urbanizaciones.filter(urbanizacion => urbanizacion.id_urbanizacion !== id);
+                  alert(response.data.success);
+               } else {
+                  alert(response.data.error || 'Error eliminando la urbanización');
+               }
             } catch (error) {
                console.error('Error eliminando la urbanización', error);
                alert('Error eliminando la urbanización');
