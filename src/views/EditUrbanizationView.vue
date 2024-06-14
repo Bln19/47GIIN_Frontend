@@ -7,44 +7,49 @@
                   <v-card class="elevation-12 rounded-lg transparent-card">
                      <v-card-text class="pa-5 mb-5">
                         <h2 class="text-center mb-10 black--text font-weight-light">EDITAR URBANIZACIÓN</h2>
-                        <v-form @submit.prevent="updateUrbanizacion">
+                        <v-form ref="form">
                            <v-text-field v-model="urbanizacion.nombre" label="Nombre" outlined></v-text-field>
                            <v-text-field v-model="urbanizacion.cif" label="CIF" outlined></v-text-field>
                            <v-text-field v-model="urbanizacion.direccion" label="Dirección" outlined></v-text-field>
-                           <v-text-field v-model="urbanizacion.cod_postal" label="Código Postal" outlined></v-text-field>
-                           
+                           <v-text-field v-model="urbanizacion.cod_postal" label="Código Postal" outlined></v-text-field>                        
+                           <v-file-input
+                              label="Seleccionar Logo"
+                              prepend-icon="mdi-camera"
+                              @change="handleFileUpload"
+                              outlined
+                           ></v-file-input>
+
                            <v-row>
                               <v-col>
                                  <v-select 
-                                    v-model="urbanizacion.id_ciudad" 
+                                    v-model="selectedCityId" 
                                     :items="ciudades" 
+                                    @update:modelValue="updateUrbanizacionCiudad" 
                                     label="Nombre de la Ciudad" 
                                     outlined 
-                                    item-title="nombre" 
+                                    item-title="ciudad_nombre" 
                                     item-value="id_ciudad" 
                                     placeholder="Selecciona una ciudad">
                                  </v-select>
                               </v-col>
                               <v-col cols="auto">
                                  <v-btn color="teal darken-4" small icon class="rounded-square" @click="goToAddCity">
-                                    <v-icon>mdi-plus</v-icon>
+                                 <v-icon>mdi-plus</v-icon>
                                  </v-btn>
                               </v-col>
                            </v-row>
 
-                           <v-text-field v-model="urbanizacion.url_logo" label="URL Logo" outlined></v-text-field>
-                           
                            <v-row justify="center">
                               <v-col cols="8" md="4">
-                                 <v-btn type="submit" color="primary" rounded large block>Guardar</v-btn>
+                                 <v-btn color="primary" rounded large block @click="updateUrbanization">Actualizar</v-btn>
                               </v-col>
                               <v-col cols="8" md="4">
                                  <v-btn color="secondary" rounded large block @click="goBack">Volver</v-btn>
                               </v-col>
                            </v-row>
+                              <v-alert v-if="error" type="error" dense>{{ error }}</v-alert>
+                              <v-alert v-if="success" type="success" dense>{{ success }}</v-alert>
                         </v-form>
-                        <v-alert v-if="error" type="error" dense>{{ error }}</v-alert>
-                        <v-alert v-if="success" type="success" dense>{{ success }}</v-alert>
                      </v-card-text>
                   </v-card>
                </v-col>
@@ -66,28 +71,19 @@ export default {
             direccion: '',
             cod_postal: '',
             id_ciudad: '',
-            url_logo: ''
          },
+         logoFile: null,
          ciudades: [],
+         selectedCityId: null,
          success: null,
          error: null
       };
    },
-   async created() {
+   async mounted() {
       await this.fetchCiudades();
-      this.fetchUrbanizacion();
+      await this.loadUrbanizationData();
    },
    methods: {
-      async fetchUrbanizacion() {
-         const { id } = this.$route.params;
-         try {
-            const response = await api.get(`/urbanizacion/${id}`);
-            this.urbanizacion = response.data;
-         } catch (error) {
-            console.error('Error cargando los datos de la urbanización', error);
-            this.error = 'Error cargando los datos de la urbanización';
-         }
-      },
       async fetchCiudades() {
          try {
             const response = await api.get('/ciudades');
@@ -97,17 +93,56 @@ export default {
             this.error = 'Error al obtener la lista de ciudades.';
          }
       },
-      async updateUrbanizacion() {
-         const { id } = this.$route.params;
+      handleFileUpload(event) {
+         this.logoFile = event.target.files[0];
+      },
+      async loadUrbanizationData() {
+         const id = this.$route.params.id;
          try {
-            const response = await api.put(`/urbanizacion/${id}`, this.urbanizacion);
+            const response = await api.get(`/urbanizacion/${id}`);
+            if (response.data) {
+               this.urbanizacion = response.data;
+               this.selectedCityId = response.data.id_ciudad;
+            } else {
+               this.error = 'Urbanización no encontrada.';
+            }
+         } catch (error) {
+            this.error = 'Error al cargar los datos de la urbanización.';
+         }
+      },
+      async updateUrbanization() {
+         try {
+            this.urbanizacion.id_ciudad = this.selectedCityId;
+            let formData = new FormData();
+            formData.append('nombre', this.urbanizacion.nombre);
+            formData.append('cif', this.urbanizacion.cif);
+            formData.append('direccion', this.urbanizacion.direccion);
+            formData.append('cod_postal', this.urbanizacion.cod_postal);
+            formData.append('id_ciudad', this.selectedCityId);
+               
+            if (this.logoFile) {
+               formData.append('logo', this.logoFile);
+            }
+            const id = this.$route.params.id;
+            const response = await api.put(`/urbanizacion/${id}`, formData, {
+               headers: {
+                  'Content-Type': 'multipart/form-data'
+               }
+            });
             if (response.data.success) {
                this.success = 'Urbanización actualizada exitosamente';
+                  setTimeout(() => {
+                     const user = JSON.parse(localStorage.getItem('user'));
+                     if (user) {
+                        this.$router.push({ name: 'dashboard', params: { id: user.id } });
+                     } else {
+                        console.error('No se encontró el usuario en localStorage');
+                     }
+                  }, 2000);
             } else {
                this.error = response.data.error || 'Error al actualizar urbanización';
             }
          } catch (error) {
-            console.error('Error en la solicitud', error);
             this.error = 'Error en la solicitud: ' + error.message;
          }
       },
@@ -115,22 +150,21 @@ export default {
          this.$router.go(-1);
       },
       goToAddCity() {
+         this.saveUrbanizationData();
          this.$router.push({ name: 'add-city' });
+      },
+      updateUrbanizacionCiudad() {
+         this.urbanizacion.id_ciudad = this.selectedCityId;
+      },
+      saveUrbanizationData() {
+         localStorage.setItem('urbanizacionData', JSON.stringify(this.urbanizacion));
+         localStorage.setItem('logoFile', this.logoFile ? this.logoFile.name : '');
       }
-   }
+   },
 };
 </script>
 
 <style scoped>
-html,
-body,
-#app {
-   height: 100%;
-   margin: 0;
-   padding: 0;
-   overflow: hidden;
-}
-
 .transparent-container {
    margin: auto;
    position: absolute;
@@ -143,23 +177,11 @@ body,
    background-color: rgba(255, 255, 255, 0.6) !important;
 }
 
-.rounded-lg {
-   border-radius: 10px;
-}
-
-.pa-5 {
-   padding: 2.5rem !important;
-}
-
-.text-center {
-   text-align: center;
-}
-
-.mb-4 {
-   margin-bottom: 1rem !important;
-}
-
-.black--text {
-   color: rgb(8, 8, 8);
+.v-btn.icon {
+   padding: 0;
+   min-width: 0;
+   width: 28px;
+   height: 28px;
+   border-radius: 3px;
 }
 </style>
