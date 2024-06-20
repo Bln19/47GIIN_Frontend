@@ -6,7 +6,14 @@
                     <v-col cols="12" md="8">
                         <v-card class="elevation-12 rounded-lg transparent-card">
                             <v-card-text class="pa-5 mb-5">
-                                <h2 class="text-center mb-10 black--text font-weight-light">LISTADO DE PROPIETARIOS</h2>
+                                <v-row>
+                                    <v-col cols="9">
+                                        <h2 class="text-center mb-10 black--text font-weight-light">LISTADO DE PROPIETARIOS</h2>
+                                    </v-col>
+                                    <v-col cols="3" class="d-flex justify-end">
+                                        <v-btn color="secondary" rounded large block @click="generateReport">Generar Reporte</v-btn>
+                                    </v-col>
+                                </v-row>
                                 <v-list>
                                     <v-list-item 
                                         v-for="(propietario, index) in propietarios" 
@@ -27,7 +34,6 @@
                                                 <v-btn color="amber" rounded large block class="mr-2" @click="editPropietario(propietario.id_perfilUsuario)">Editar</v-btn>
                                                 <v-btn color="red" rounded large block class="ml-2" @click="deletePropietario(propietario.id_perfilUsuario)">Eliminar</v-btn>
                                             </v-col>
-
                                         </v-row>
                                     </v-list-item>
                                 </v-list>
@@ -81,6 +87,20 @@ export default {
         },
         goBack() {
             this.$router.go(-1); 
+        },
+        async generateReport() {
+            try {
+                const response = await api.get(`/report/propietarios/pdf`, { responseType: 'blob' });
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'propietarios_reporte.pdf');
+                document.body.appendChild(link);
+                link.click();
+            } catch (error) {
+                console.error('Error generando el reporte', error);
+                alert('Error generando el reporte');
+            }
         }
     }
 };
