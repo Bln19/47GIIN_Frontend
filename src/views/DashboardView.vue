@@ -45,6 +45,8 @@
                                 <v-col cols="12">
                                     <v-btn @click="goToPermissionsList" class="rounded-btn permission-border" block>Permisos</v-btn>
                                 </v-col>
+
+                                
                             </v-row>
                         </v-card-actions>
                     </v-card>
@@ -159,7 +161,7 @@ export default {
         },
         goToUrbanizationsList(){
             this.$router.push({ name: 'list-urbanization' });
-        }
+        },
 
     }
 };
@@ -195,6 +197,10 @@ export default {
     border-color: #943fb5;
     color: #943fb5;
 
+}
+.services-border{
+    border-color: #0b8349;
+    color: #0b8349;
 }
 
 </style>

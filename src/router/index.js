@@ -16,7 +16,6 @@ import EditUrbanizationView from '../views/EditUrbanizationView.vue';
 
 
 
-
 import LoginForm from '../components/LoginForm.vue';
 import UrbForm from '../components/UrbForm.vue';
 import UserRegisterForm from '../components/UserRegisterForm.vue';
@@ -31,6 +30,7 @@ import CityForm from '../components/CityForm.vue';
 import CountryForm from '../components/CountryForm.vue';
 import CountryList from '../components/CountryList.vue';
 import CityList from '../components/CityList.vue';
+
 
 
 
@@ -222,8 +222,7 @@ const routes = [
     component: EditCountryView,
     props: true,
     meta: { requiresAuth: true, role: 'superadmin' },
-  },
-
+  }
 ];
 
 const router = createRouter({
